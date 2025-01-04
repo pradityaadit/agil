@@ -61,7 +61,7 @@ class MovieController extends Controller
             "date" => "nullable",
             "video_type" => "nullable",
             "category_id" => "nullable|exists:categories,id",
-            "movie_info" => "nullable",
+            // "movie_info" => "nullable",
             "screenshots"=> "nullable",
             'download_description' => "required",
             "thumbnail" => "nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048",
@@ -102,9 +102,92 @@ class MovieController extends Controller
         $screenshots = $dom->saveHTML();
         $data['screenshots'] = $screenshots;
 
+        dd($data);
+
         Movie::create($data);
         return redirect()->route('movie.all')->with('alert', 'Your movie has been created successfully');
        
+    }
+
+
+    public function editMovie($id){
+        $data = Movie::where('id', $id)->first();
+        $cats = Category::all();
+        return view('admin.movie.edit_movie', compact('data', 'cats'));
+    }
+
+
+    public function updateMovie(Request $request, $id){
+        $data = $request->validate([
+            "title" => "required",
+            "date" => "nullable",
+            "video_type" => "nullable",
+            "category_id" => "nullable|exists:categories,id",
+            "movie_info" => "nullable",
+            "screenshots"=> "nullable",
+            'download_description' => "required",
+            "thumbnail" => "nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048",
+            "meta_title" => "nullable",
+            "meta_description" => "nullable",
+            "meta_keywords" => "nullable",
+        ]);
+
+
+        $movie = Movie::findOrFail($id);
+
+        if($request->hasFile('thumbnail')){
+            $exsistingImage = $movie->thumbnail;
+            $imagePath = public_path('/thumbnails/' . $exsistingImage);
+            if(file_exists($imagePath)){
+                unlink($imagePath);
+            }
+
+            $imageName = time() . '.' .$request->thumbnail->getClientOriginalExtension();
+            $request->thumbnail->move(public_path('/thumbnails'), $imageName);
+            $data['thumbnail']=$imageName;
+        }
+
+
+        // handle screenshot update
+        if(isset($data['screenshots'])){
+            if ($data['screenshots'] ) {
+
+                $screenshots = $data['screenshots'];
+                $dom = new \DOMDocument();
+                libxml_use_internal_errors(true);
+                $dom->loadHTML($screenshots, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+                $images = $dom->getElementsByTagName('img');
+
+
+                foreach ($images as $index => $image) {
+                    if(strpos($image->getAttribute('src'),'data:image/') ===0){
+                        $imageSrc = $image->getAttribute('src');
+                        list($type, $imageSrc) = explode(';', $imageSrc);
+                        list(, $imageSrc) = explode(',', $imageSrc);
+                        $imageData = base64_decode($imageSrc);
+        
+                        $image_name = 'upload/' . time() . Str::random(10) . '.png';
+                        Storage::disk('public')->put($image_name, $imageData);
+        
+                        $image->removeAttribute('src');
+                        $image->setAttribute('src', asset('storage/' . $image_name));
+                    }
+                    
+                }
+
+                $screenshots = $dom->saveHTML();
+                $data['screenshots'] = $screenshots;
+            }else{
+                $data['screenshots'] = null;
+            }
+        }else{
+            $data['screenshots'] = null;
+        }
+
+
+        $movie->update($data);
+        return redirect()->route('movie.all')->with('alert', 'Your movie has been updated successfully');
     }
 
 }

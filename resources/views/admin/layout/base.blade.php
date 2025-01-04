@@ -258,21 +258,36 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="./index.html" class="nav-link active">
+                                    <a href="{{ route('movie.create') }}" class="nav-link active">
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p> Create</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="./index2.html" class="nav-link">
+                                    <a href="{{ route('movies.all') }}" class="nav-link">
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>All</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="./index3.html" class="nav-link">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Any</p>
+                                    <a href="{{ route('drafts.all') }}" class="nav-link"
+                                        style="background-color: red; color: white;">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>All Drafts</p>
+                                        <p
+                                            style="border-radius: 50%; padding: 2px; background-color:whitesmoke; color:black; font-weight:bold">
+                                            {{-- {{ $countDraftPost }} --}}
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('movies.all') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>All Posts</p>
+                                        <p
+                                            style="border-radius: 50%; padding: 2px; background-color:whitesmoke; color:black; font-weight:bold">
+                                            {{-- {{ $countPublicPost }} --}}
+                                        </p>
                                     </a>
                                 </li>
                             </ul>
