@@ -67,8 +67,11 @@
                                                         class="fa fa-edit mx-1"></a>
                                                     <a href="{{ route('post.delete', $item->id) }}"
                                                         class="fa fa-trash mx-1"></a>
-                                                    <a href="{{ route('post.draft', $item->id) }}"
-                                                        class="btn btn-info btn-sm mx-2">Draft</a>
+                                                        <form action="{{ route('post.draft', $item->id) }}" method="POST" style="display:inline;">
+                                                            @csrf
+                                                            @method('PUT') <!-- Metode PUT untuk mengubah status ke draft -->
+                                                            <button type="submit" class="btn btn-info btn-sm mx-2">Draft</button>
+                                                        </form>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -78,12 +81,9 @@
                             </div>
                         </div>
                     </div>
-                    <!-- ./col -->
                 </div>
-                <!-- /.row -->
-            </div><!-- /.container-fluid -->
+            </div>
         </section>
-        <!-- /.content -->
     </div>
 
     <script>
