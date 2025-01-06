@@ -1,104 +1,83 @@
 @extends('admin.layout.base')
 
-@section('title')
-    Posts
-@endsection
+@section('title', 'Posts')
 
 @section('contents')
-    <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <div class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1 class="m-0">Posts</h1>
-                    </div><!-- /.col -->
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Posts</li>
-                        </ol>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Posts</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Posts</li>
+                    </ol>
+                </div>
+            </div>
         </div>
-        <!-- /.content-header -->
+    </div>
 
-        <!-- Main content -->
-        <section class="content">
-            <div class="container-fluid">
-                <!-- Small boxes (Stat box) -->
-                <div class="row">
-                    <div class="col-lg-12 col-11">
-                        <div class=" card w-100 ">
-                            <div class="card-header">
-                                <div class="car-title">
-                                    <i class="ion ion-clipboard mr-1"></i>
-                                    All Posts
-                                </div>
-                            </div>
-                            <div class="p-lg-5 gap-4 m-lg-5 m-0  justify-content-center align-items-center flex">
-                                <div class="row justify-content-center  align-items-center ">
-                                    <div class="col-lg-5 col-12 p-4 text-center bg-warning ">
-                                        <h2>
-                                            All Posts
-                                        </h2>
-                                    </div>
-                                </div>
-                                <table class="table table-bordered table-stripped table-dark">
-                                    <thead>
+    <!-- Main Content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 col-md-12">
+                    <div class="card">
+                        <div class="card-header bg-warning text-center">
+                            <h3 class="card-title font-weight-bold">All Posts</h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead class="thead-dark text-center">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Post Title</th>
+                                        <th>Category</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($allMovies as $item)
                                         <tr>
-                                            <th class="text-center">#</th>
-                                            <th class="text-center">Post Title</th>
-                                            <th class="text-center">Category</th>
-                                            <th class="text-center">status</th>
-                                            <th class="text-center">Action</th>
+                                            <td class="text-center">{{ $item->id }}</td>
+                                            <td class="text-center">{{ $item->title }}</td>
+                                            <td class="text-center">{{ $item->category_id }}</td>
+                                            <td class="text-center">
+                                                <span class="badge badge-{{ $item->status == 'Active' ? 'success' : 'danger' }} text-black">
+                                                    {{ $item->status }}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <form action="{{ route('post.draft', $item->id) }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" class="btn btn-info btn-sm mx-2">Draft</button>
+                                                </form>
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($allMovies as $item)
-                                            <tr>
-                                                <th class="text-center">{{ $item->id }}</th>
-                                                <td class="text-center">{{ $item->title }}</td>
-                                                <td class="text-center">{{ $item->category_id }}</td>
-                                                <td class="text-center">{{ $item->status }}</td>
-                                                <td class="text-center">
-                                                    <a href="{{ route('post.edit', $item->id) }}"
-                                                        class="fa fa-edit mx-1"></a>
-                                                    <a href="{{ route('post.delete', $item->id) }}"
-                                                        class="fa fa-trash mx-1"></a>
-                                                        <form action="{{ route('post.draft', $item->id) }}" method="POST" style="display:inline;">
-                                                            @csrf
-                                                            @method('PUT') <!-- Metode PUT untuk mengubah status ke draft -->
-                                                            <button type="submit" class="btn btn-info btn-sm mx-2">Draft</button>
-                                                        </form>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <div class="mt-4 text-center">
                                 {{ $allMovies->links() }}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
+</div>
 
+<!-- Alert Notification -->
+@if (Session::has('alert'))
     <script>
-        var msg = Session::get('alert');
-        var exist = Session::has('alert');
-
-        if (exist) {
-            alert(msg);
-        }
+        alert("{{ Session::get('alert') }}");
     </script>
-    <!-- Bootstrap JavaScript Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
-        integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
-    </script>
+@endif
 @endsection

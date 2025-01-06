@@ -5,12 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
+
 use App\Models\Movie;
 use Storage;
 use Str;
 
 class MovieController extends Controller
 {
+    public function index()
+    {
+        // Ambil semua movie yang statusnya 1 (terbit)
+        $allMovies = Movie::where('status', 1)->get();  // Menampilkan hanya movie yang sudah dipublikasikan
+
+        return view('home', compact('allMovies'));
+    }
+
     public function allDrafts()
     {
         $allDrafts = Movie::where('status', 0)->paginate(10);
@@ -57,6 +66,21 @@ class MovieController extends Controller
         $allMovies = Movie::where('status', 2)->paginate(10);
         return view('admin.movie.recycle', compact('allMovies'));
     }
+
+    public function show($id)
+    {
+        $movie = Movie::find($id);
+
+        if (!$movie) {
+            abort(404, 'Movie not found');
+        }
+
+        return view('movie.show', compact('movie'));
+    }
+
+
+
+
 
     public function createMovie()
     {
@@ -133,77 +157,46 @@ class MovieController extends Controller
     }
 
 
-
     public function updateMovie(Request $request, $id)
     {
+        // Validasi inputan
         $data = $request->validate([
             "title" => "required",
-            "date" => "nullable",
-            "video_type" => "nullable",
-            "category_id" => "nullable|exists:categories,id",
-            "movie_info" => "nullable",
-            "screenshots" => "nullable",
-            'download_description' => "required",
+            "category_id" => "required|exists:categories,id", // Pastikan kategori valid
+            "description" => "nullable|string",
+            "screenshots" => "nullable|string",  // Kalau kamu menyertakan base64 atau data image dalam screenshots
             "thumbnail" => "nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048",
-            "meta_title" => "nullable",
-            "meta_description" => "nullable",
-            "meta_keywords" => "nullable",
+            "movie_info" => "nullable|string",
         ]);
 
-
+        // Mencari movie berdasarkan id
         $movie = Movie::findOrFail($id);
 
+        // Cek jika ada file thumbnail baru
         if ($request->hasFile('thumbnail')) {
-            $exsistingImage = $movie->thumbnail;
-            $imagePath = public_path('/thumbnails/' . $exsistingImage);
-            if (file_exists($imagePath)) {
-                unlink($imagePath);
+            // Hapus thumbnail lama jika ada
+            if ($movie->thumbnail) {
+                $imagePath = public_path('/thumbnails/' . $movie->thumbnail);
+                if (file_exists($imagePath)) {
+                    unlink($imagePath); // Menghapus file lama
+                }
             }
 
+            // Upload thumbnail baru
             $imageName = time() . '.' . $request->thumbnail->getClientOriginalExtension();
             $request->thumbnail->move(public_path('/thumbnails'), $imageName);
             $data['thumbnail'] = $imageName;
         }
 
-
-        // handle screenshot update
-        if (isset($data['screenshots'])) {
-            if ($data['screenshots']) {
-
-                $screenshots = $data['screenshots'];
-                $dom = new \DOMDocument();
-                libxml_use_internal_errors(true);
-                $dom->loadHTML($screenshots, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-
-                $images = $dom->getElementsByTagName('img');
-
-
-                foreach ($images as $index => $image) {
-                    if (strpos($image->getAttribute('src'), 'data:image/') === 0) {
-                        $imageSrc = $image->getAttribute('src');
-                        list($type, $imageSrc) = explode(';', $imageSrc);
-                        list(, $imageSrc) = explode(',', $imageSrc);
-                        $imageData = base64_decode($imageSrc);
-
-                        $image_name = 'upload/' . time() . Str::random(10) . '.png';
-                        Storage::disk('public')->put($image_name, $imageData);
-
-                        $image->removeAttribute('src');
-                        $image->setAttribute('src', asset('storage/' . $image_name));
-                    }
-                }
-
-                $screenshots = $dom->saveHTML();
-                $data['screenshots'] = $screenshots;
-            } else {
-                $data['screenshots'] = null;
-            }
-        } else {
-            $data['screenshots'] = null;
+        // Proses update screenshot (bisa mengolah base64 atau format lainnya jika perlu)
+        if ($request->has('screenshots')) {
+            $data['screenshots'] = $request->screenshots;
         }
 
-
+        // Update data movie
         $movie->update($data);
-        return redirect()->route('movie.all')->with('alert', 'Your movie has been updated successfully');
+
+        // Redirect setelah update sukses
+        return redirect()->route('movies.all')->with('alert', 'Movie updated successfully!');
     }
 }

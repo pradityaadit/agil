@@ -4,6 +4,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MovieController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DraftController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -15,20 +17,24 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return view('homescreen');
-});
+Route::get('/', [HomeController::class, 'index']);
+
+
 
 Route::put('/movies/{movie}/draft', [MovieController::class, 'makeDraft'])->name('post.draft');
 
 Route::delete('/movies/{movie}', [MovieController::class, 'deleteMovie'])->name('post.delete');
 
 // Route untuk halaman edit movie
-Route::get('/movies/{movie}/edit', [MovieController::class, 'editMovie'])->name('post.edit');
-
+Route::get('/movies/{id}/edit', [MovieController::class, 'editMovie'])->name('movie.edit');
 
 Route::get('/movies', [MovieController::class, 'allMovies'])->name('movie.all');
+
+Route::get('/movie/{id}', [MovieController::class, 'show'])->name('movie.show');
+
+
 
 
 Route::prefix("admin")->group(function () {

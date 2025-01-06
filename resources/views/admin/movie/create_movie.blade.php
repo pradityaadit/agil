@@ -5,7 +5,7 @@
 @endsection
 
 @section('contents')
-    <div class="content-wrapper">
+    <div class="content-wrapper pt-2">
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
@@ -104,7 +104,7 @@
                                         @enderror
                                     </div>
 
-                                    <div class="form-group text-center">
+                                    <div class="form-group text-center pt-2">
                                         <button type="submit" class="btn btn-success">Submit</button>
                                     </div>
                                 </form>
@@ -113,6 +113,6 @@
                     </div>
                 </div>
             </div>
-        </section>wsa
+        </section>
     </div>
 @endsection

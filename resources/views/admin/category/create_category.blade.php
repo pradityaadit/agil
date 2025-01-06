@@ -1,84 +1,46 @@
 @extends('admin.layout.base')
-@section('title')
-    Create category
-@endsection
+@section('title', 'Create Category')
 @section('contents')
-    <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <div class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1 class="m-0">Category</h1>
-                    </div><!-- /.col -->
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">category</li>
-                        </ol>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
-        </div>
-        <!-- /.content-header -->
-
-        <!-- Main content -->
-        <section class="content">
-            <div class="container-fluid">
-                <!-- Small boxes (Stat box) -->
-                <div class="row">
-                    <div class="col-lg-12 col-11">
-                        <div class=" card w-100 ">
-                            <div class="card-header">
-                                <div class="car-title">
-                                    <i class="ion ion-clipboard mr-1"></i>
-                                    Fill form and submit
+<div class="content-wrapper">
+    <!-- Main Content -->
+    <section class="content pt-2">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <div class="card">
+                        <div class="card-header bg-warning text-center">
+                            <h3 class="card-title">Add New Category</h3>
+                        </div>
+                        <div class="card-body">
+                            <form action="{{ route('category.store') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <!-- Category Name -->
+                                <div class="form-group">
+                                    <label for="category_name" class="font-weight-bold">Category Name</label>
+                                    <input type="text" id="category_name" name="category_name" class="form-control"
+                                        value="{{ old('category_name') }}" placeholder="Enter category name" required>
+                                    @error('category_name')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
                                 </div>
-                            </div>
-                            <div class="p-lg-5 gap-4 m-lg-5 m-0  justify-content-center align-items-center flex">
-                                <form action="{{ route('category.store') }}" method="POST" enctype="multipart/form-data">
-                                    @csrf
-
-                                    <div class="row justify-content-center  align-items-center ">
-                                        <div class="col-lg-5 col-12 p-4 text-center bg-warning ">
-                                            <h2>
-                                                Add New Category
-                                            </h2>
-                                        </div>
-
-                                        <div class="col-lg-11 col-12 p-3 mt-5 ">
-                                            <label for="category_name">Category Name</label>
-                                            <input type="text" id="category_name" name="category_name"
-                                                class="form-control " value="{{ old('category_name') }}">
-                                            @error('category_name')
-                                                <p class="text-danger">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div
-                                        class="mt-2 col-lg-10 col-10 text-center justify-content-center align-items-center flex p-5">
-                                        <input type="submit" class="btn btn-success w-100 flex">
-                                    </div>
-
-                                </form>
-                            </div>
+                                <!-- Submit Button -->
+                                <div class="text-center mt-4">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-save"></i> Save Category
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    <!-- ./col -->
                 </div>
-                <!-- /.row -->
-            </div><!-- /.container-fluid -->
-        </section>
-        <!-- /.content -->
-    </div>
-
+            </div>
+        </div>
+    </section>
+</div>
+<!-- Success Alert -->
+@if (Session::has('alert'))
     <script>
-        const msg = Session::get('alert');
-        const exist = Session::has('alert');
-
-        if (exist) {
-            alert(msg);
-        }
+        alert("{{ Session::get('alert') }}");
     </script>
+@endif
 @endsection

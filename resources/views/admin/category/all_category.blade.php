@@ -1,94 +1,75 @@
 @extends('admin.layout.base')
-@section('title')
-    Category
-@endsection
+@section('title', 'Category')
 @section('contents')
-    <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <div class="content-header">
-            <div class="container-fluid">
-                <div class="row mb-2">
-                    <div class="col-sm-6">
-                        <h1 class="m-0">Category</h1>
-                    </div><!-- /.col -->
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">category</li>
-                        </ol>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-            </div><!-- /.container-fluid -->
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Category</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Category</li>
+                    </ol>
+                </div>
+            </div>
         </div>
-        <!-- /.content-header -->
-
-        <!-- Main content -->
-        <section class="content">
-            <div class="container-fluid">
-                <!-- Small boxes (Stat box) -->
-                <div class="row">
-                    <div class="col-lg-12 col-11">
-                        <div class=" card w-100 ">
-                            <div class="card-header">
-                                <div class="car-title">
-                                    <i class="ion ion-clipboard mr-1"></i>
-                                    All Categories
-                                </div>
-                            </div>
-                            <div class="p-lg-5 gap-4 m-lg-5 m-0  justify-content-center align-items-center flex">
-                                <div class="row justify-content-center  align-items-center ">
-                                    <div class="col-lg-5 col-12 p-4 text-center bg-warning ">
-                                        <h2>
-                                            All Category
-                                        </h2>
-                                    </div>
-                                </div>
-                                <table class="table table-bordered table-stripped table-dark">
-                                    <thead>
+    </div>
+    <!-- Main Content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 col-md-12">
+                    <div class="card">
+                        <div class="card-header bg-warning text-center">
+                            <h3 class="card-title font-weight-bold">All Categories</h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered table-striped table-hover">
+                                <thead class="thead-dark text-center">
+                                    <tr>
+                                        <th>id</th>
+                                        <th>Category Name</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($data as $item)
                                         <tr>
-                                            <th class="text-center">#</th>
-                                            <th class="text-center">Category Name</th>
-                                            <th class="text-center">status</th>
-                                            <th class="text-center">Action</th>
+                                            <td class="text-center">{{ $item->id }}</td>
+                                            <td class="text-center">{{ $item->category_name }}</td>
+                                            <td class="text-center">
+                                                <span class="badge badge-{{ $item->category_status == 'Active' ? 'success' : 'danger' }} text-black">
+                                                    {{ $item->category_status }}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="{{ route('category.edit', $item->id) }}" class="btn btn-sm btn-primary mx-1">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </a>
+                                                <a href="{{ route('category.delete', $item->id) }}" class="btn btn-sm btn-danger mx-1" onclick="return confirm('Are you sure you want to delete this category?');">
+                                                    <i class="fas fa-trash"></i> Delete
+                                                </a>
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($data as $item)
-                                            <tr>
-                                                <th class="text-center">{{ $item->id }}</th>
-                                                <td class="text-center">{{ $item->category_name }}</td>
-                                                <td class="text-center">{{ $item->category_status }}</td>
-                                                <td class="text-center">
-                                                    <a href="{{ route('category.edit', $item->id) }}"
-                                                        class="fa fa-edit mx-1">
-                                                        Edit
-                                                    </a>
-                                                    <a href="{{ route('category.delete', $item->id) }}"
-                                                        class="fa fa-trash mx-1">delete</a>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-
-                    <!-- ./col -->
                 </div>
-                <!-- /.row -->
-            </div><!-- /.container-fluid -->
-        </section>
-        <!-- /.content -->
-    </div>
-
+            </div>
+        </div>
+    </section>
+</div>
+<!-- Alert Notification -->
+@if (Session::has('alert'))
     <script>
-        var msg = Session::get('alert');
-        var exist = Session::has('alert');
-
-        if (exist) {
-            alert(msg);
-        }
+        alert("{{ Session::get('alert') }}");
     </script>
+@endif
 @endsection
