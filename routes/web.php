@@ -49,6 +49,7 @@ Route::prefix("admin")->group(function () {
 
         Route::middleware("auth:admin")->group(function () {
             Route::get("/", 'index')->name('admin.dashboard');
+            Route::get("/logout", 'logout')->name('admin.logout');
         });
 
         Route::post('/', function () {

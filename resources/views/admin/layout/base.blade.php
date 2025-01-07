@@ -72,8 +72,8 @@
                     <!--begin::User Menu Dropdown-->
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img src="../../dist/assets/img/user2-160x160.jpg"
-                                class="user-image rounded-circle shadow" alt="User Image" />
+                            <img src="../../dist/assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow"
+                                alt="User Image" />
                             <span class="d-none d-md-inline">Muhammad Gibran M</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
@@ -179,13 +179,10 @@
                         </li>
                         {{-- end of category --}}
                         <li class="nav-item">
-                            <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                                @csrf
-                                <button type="submit" class="nav-link bg-danger text-white border-0 w-100 text-start">
-                                    <i class="nav-icon fa fa-circle"></i>
-                                    <p>Logout</p>
-                                </button>
-                            </form>
+                            <a href="{{ route('admin.logout') }}" class="nav-link bg-danger">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Logout</p>
+                            </a>
                         </li>
 
 

@@ -23,6 +23,11 @@ class AdminController extends Controller
         }
         return view('admin.login');
      }
+
+     public function logout(){
+        Auth::logout();
+        return redirect()->route('admin.login')->with('alert', '👮‍♂️ Logged OUT 🥱');
+     }
     public function index()
     {
         //
@@ -74,6 +79,10 @@ class AdminController extends Controller
      */
     public function destroy(Admin $admin)
     {
+        $data=Admin::where('id', $admin->id)->first();
+
         //
     }
+
+
 }
