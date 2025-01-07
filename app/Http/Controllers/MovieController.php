@@ -199,4 +199,11 @@ class MovieController extends Controller
         // Redirect setelah update sukses
         return redirect()->route('movies.all')->with('alert', 'Movie updated successfully!');
     }
+
+
+    public function play($id)
+    {
+        $movie = Movie::findOrFail($id); // Pastikan model Movie sudah diimport
+        return view('movie.play', compact('movie'));
+    }
 }

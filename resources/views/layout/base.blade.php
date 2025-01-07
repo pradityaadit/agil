@@ -133,7 +133,7 @@
           <!-- Search and Mobile Menu -->
           <div class="flex items-center space-x-4">
             <div
-              class="hidden md:flex items-center bg-[#333] rounded-full px-4 py-2"
+              class="hidden md:flex items-center bg-[#fff] rounded-full px-4 py-2"
             >
               <input
                 type="text"
@@ -155,7 +155,7 @@
                 />
               </svg>
             </div>
-            <button class="md:hidden">
+            <button class="md:hidden text-white">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -195,7 +195,7 @@
 
 
     <!-- Footer -->
-    <div class="container mx-auto p-6 bg-[#1a1a1a] text-white">
+    <div class=" mx-auto p-6 bg-[#1a1a1a] text-white">
         <!-- Email Input Section -->
         <div class="text-center mb-8">
           <p class="text-lg font-semibold">

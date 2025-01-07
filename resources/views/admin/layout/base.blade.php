@@ -83,7 +83,6 @@
                                     alt="User Image" />
                                 <p>
                                     M Gibran Maryanto
-                                    <small>Full stack developer since 2023</small>
                                 </p>
                             </li>
                             <!--end::User Image-->
@@ -180,11 +179,15 @@
                         </li>
                         {{-- end of category --}}
                         <li class="nav-item">
-                            <a href="./index3.html" class="nav-link bg-danger">
-                                <i class="nav-icon fa fa-circle"></i>
-                                <p>Logout</p>
-                            </a>
+                            <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" class="nav-link bg-danger text-white border-0 w-100 text-start">
+                                    <i class="nav-icon fa fa-circle"></i>
+                                    <p>Logout</p>
+                                </button>
+                            </form>
                         </li>
+
 
                     </ul>
                     <!--end::Sidebar Menu-->

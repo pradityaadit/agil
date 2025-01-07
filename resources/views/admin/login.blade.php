@@ -5,53 +5,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Login</title>
 </head>
 
-<body>
-    <div class="container-fluid d-flex" style="height: 100vh">
-        <div class="container-fluid justify-content-center align-items-center d-flex h-100">
-            <div class="row justify-content-center align-items-center w-100">
-                <div class="col-12 col-lg-5 col-md-10 ">
-                    <div class="card  justify-content-center">
-                        <div class="card-header text-center">
-                            <h3 style="letter-spacing: 2px">Admin Login</h3>
-                        </div>
-                        <div class="card-body">
-                            <form action="" method="post">
-                                @csrf
-                                <div class="">
-                                    <label for="">Email</label>
-                                    <input type="email" name="email" value="{{ old('email') }}"
-                                        class="form-control" />
-                                    @error('email')
-                                        <p class="text-error text-danger">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                <div class="mt-3">
-                                    <label for="">Password</label>
-                                    <input type="password" name="password" value="{{ old('password') }}"
-                                        class="form-control" />
-                                    @error('password')
-                                        <p class="text-error text-danger"> {{ $message }}</p>
-                                    @enderror
-                                </div>
-                                <div class="justify-content-center align-items-center w-100 d-flex">
-                                    <button type="submit"
-                                        class="btn btn-outline btn-success mt-3 px-3 text-white">Login</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<body class="min-h-screen flex items-center justify-center bg-black bg-opacity-50 relative">
+    <!-- Background Image -->
+    <div class="absolute inset-0 -z-10 bg-cover bg-center brightness-50"
+        style="background-image: url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?ixlib=rb-4.0.3');">
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous">
-    </script>
+
+    <div class="w-full max-w-md bg-black bg-opacity-75 p-8 rounded-lg space-y-8">
+        <!-- Header -->
+        <div class="text-center">
+            <h3 class="text-3xl font-bold text-red-600 tracking-wider">Admin Login</h3>
+        </div>
+
+        <!-- Form -->
+        <form action="" method="post" class="space-y-6">
+            @csrf
+            <!-- Email Input -->
+            <div>
+                <label for="email" class="block text-sm text-zinc-400 mb-1">Email</label>
+                <input type="email" id="email" placeholder="Email" name="email" value="{{ old('email') }}"
+                    class="w-full px-4 py-3 rounded bg-zinc-800 text-white border border-zinc-700 focus:outline-none focus:ring focus:ring-zinc-500"
+                    required />
+                @error('email')
+                    <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Password Input -->
+            <div>
+                <label for="password" class="block text-sm text-zinc-400 mb-1">Password</label>
+                <input type="password" id="password" placeholder="password" name="password" value="{{ old('password') }}"
+                    class="w-full px-4 py-3 rounded bg-zinc-800 text-white border border-zinc-700 focus:outline-none focus:ring focus:ring-zinc-500"
+                    required />
+                @error('password')
+                    <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="flex items-center justify-between text-sm text-zinc-400">
+                <label class="flex items-center">
+                    <input type="checkbox" name="remember" class="mr-2 bg-zinc-800 border-zinc-700">
+                    Ingat saya
+                </label>
+            </div>
+
+            <!-- Submit Button -->
+            <div>
+                <button type="submit"
+                    class="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded transition duration-200">
+                    Login
+                </button>
+            </div>
+        </form>
+
+
+    </div>
+
+    <!-- Alert Script -->
     <script>
         var msg = '{{ Session::get('alert') }}';
         var exist = '{{ Session::has('alert') }}';

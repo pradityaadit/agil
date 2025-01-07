@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MovieController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DraftController;
+use Illuminate\Support\Facades\Auth;
 
 
 /*
@@ -35,6 +36,10 @@ Route::get('/movies', [MovieController::class, 'allMovies'])->name('movie.all');
 Route::get('/movie/{id}', [MovieController::class, 'show'])->name('movie.show');
 
 
+Route::get('/movie/{id}/watch', [MovieController::class, 'play'])->name('movie.play');
+
+
+
 
 
 Route::prefix("admin")->group(function () {
@@ -45,6 +50,11 @@ Route::prefix("admin")->group(function () {
         Route::middleware("auth:admin")->group(function () {
             Route::get("/", 'index')->name('admin.dashboard');
         });
+
+        Route::post('/', function () {
+            Auth::logout(); // Logout user
+            return redirect('/',); // Redirect ke halaman "/"
+        })->name('logout');
 
         Route::controller(CategoryController::class)->group(function () {
 
